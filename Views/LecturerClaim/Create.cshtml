@@ -1,0 +1,35 @@
+﻿@model Contract_Monthly_Claim_System_Part2.Models.Claim
+@{
+    ViewData["Title"] = "Submit Claim";
+}
+
+<h2>Submit Claim</h2>
+
+<form asp-action="Create" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label asp-for="HoursWorked"></label>
+        <input asp-for="HoursWorked" class="form-control" />
+        <span asp-validation-for="HoursWorked" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="HourlyRate"></label>
+        <input asp-for="HourlyRate" class="form-control" />
+        <span asp-validation-for="HourlyRate" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Notes"></label>
+        <textarea asp-for="Notes" class="form-control"></textarea>
+    </div>
+    <div class="form-group">
+        <label>Upload Supporting Document</label>
+        <input type="file" name="file" class="form-control" />
+        <span asp-validation-summary="ModelOnly" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary mt-2">Submit</button>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
