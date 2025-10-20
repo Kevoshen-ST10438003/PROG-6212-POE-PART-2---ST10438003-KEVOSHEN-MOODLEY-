@@ -45,9 +45,17 @@ namespace Contract_Monthly_Claim_System_Part2.Controllers
             if (claim == null) return NotFound();
 
             if (decision == "Approve")
-                claim.Status = "Approved";
+            {
+                claim.Status = "Coordinator Approved";
+                TempData["Message"] = "✅ Claim verified successfully.";
+                TempData["AlertClass"] = "alert-success";
+            }
             else if (decision == "Reject")
+            {
                 claim.Status = "Rejected";
+                TempData["Message"] = "❌ Claim rejected.";
+                TempData["AlertClass"] = "alert-danger";
+            }
 
             _context.SaveChanges();
             return RedirectToAction(nameof(Index));
