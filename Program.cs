@@ -1,3 +1,6 @@
+using Contract_Monthly_Claim_System_Part2.Models;
+using Microsoft.EntityFrameworkCore;
+
 namespace Contract_Monthly_Claim_System_Part2
 {
     public class Program
@@ -8,6 +11,9 @@ namespace Contract_Monthly_Claim_System_Part2
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            builder.Services.AddDbContext<CMCSContext>(options =>
+            options.UseSqlServer(builder.Configuration.GetConnectionString("CMCSContext")));
 
             var app = builder.Build();
 

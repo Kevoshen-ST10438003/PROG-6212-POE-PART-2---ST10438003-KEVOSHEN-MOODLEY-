@@ -16,20 +16,20 @@ namespace Contract_Monthly_Claim_System_Part2.Controllers
             _context = context;
         }
 
-        // GET: Create Claim
+        
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Create Claim
+       
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Claim claim, IFormFile? file)
         {
             if (ModelState.IsValid)
             {
-                // Handle file upload
+               
                 if (file != null)
                 {
                     var allowedExtensions = new[] { ".pdf", ".docx", ".xlsx" };
@@ -68,7 +68,7 @@ namespace Contract_Monthly_Claim_System_Part2.Controllers
             return View(claim);
         }
 
-        // GET: List Lecturer Claims
+       
         public IActionResult Index()
         {
             var claims = _context.Claims.ToList();
@@ -91,7 +91,7 @@ namespace Contract_Monthly_Claim_System_Part2.Controllers
             return ms.ToArray();
         }
 
-        // Decrypt helper (for viewing files)
+        // Decrypt helper 
         private byte[] DecryptFile(byte[] encryptedData)
         {
             using Aes aes = Aes.Create();
