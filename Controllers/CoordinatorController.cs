@@ -1,4 +1,5 @@
-﻿using Contract_Monthly_Claim_System_Part2.Models;
+﻿using Contract_Monthly_Claim_System_Part2.Helpers;
+using Contract_Monthly_Claim_System_Part2.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
@@ -57,12 +58,24 @@ namespace Contract_Monthly_Claim_System_Part2.Controllers
         
         public IActionResult Download(int docId)
         {
-            var doc = _context.SupportingDocuments.Find(docId);
-            if (doc == null) return NotFound();
+            var document = _context.SupportingDocuments.FirstOrDefault(d => d.SupportingDocumentID == docId);
+
+            if (document == null)
+            {
+                return NotFound("Document not found.");
+            }
+
+            var encryptedPath = Path.Combine(Directory.GetCurrentDirectory(), "Uploads", document.FileName);
+
+            if (!System.IO.File.Exists(encryptedPath))
+            {
+                return NotFound("File not found on server.");
+            }
+
+            var decryptedBytes = FileEncryptionHelper.DecryptFile(encryptedPath);
 
             
-            byte[] decrypted = DecryptFile(doc.EncryptedFile);
-            return File(decrypted, "application/octet-stream", doc.FileName);
+            return File(decryptedBytes, "application/octet-stream", document.FileName);
         }
 
       
