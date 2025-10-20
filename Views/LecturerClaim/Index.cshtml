@@ -1,0 +1,59 @@
+﻿@model IEnumerable<Contract_Monthly_Claim_System_Part2.Models.Claim>
+@{
+    ViewData["Title"] = "My Claims";
+}
+
+<h2>My Claims</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ClaimID</th>
+            <th>Hours Worked</th>
+            <th>Hourly Rate</th>
+            <th>Total Amount</th>
+            <th>Status</th>
+            <th>Submitted</th>
+            <th>Documents</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var claim in Model)
+        {
+            <tr>
+                <td>@claim.ClaimID</td>
+                <td>@claim.HoursWorked</td>
+                <td>@claim.HourlyRate</td>
+                <td>@(claim.HoursWorked* claim.HourlyRate)</td>
+                <td>
+                    @if (claim.Status == "Pending")
+                    {
+                        <span class="badge bg-secondary">Pending</span>
+                    }
+                    else if (claim.Status == "Approved")
+                    {
+
+                        <span class="badge bg-success">Approved</span>
+                    }
+                    else if (claim.Status == "Rejected")
+                    {
+
+                        <span class="badge bg-danger">Rejected</span>
+                    }
+                </td>
+                <td>@claim.SubmissionDate.ToShortDateString()</td>
+                <td>
+                    @if (claim.Documents != null)
+                    {
+                        foreach (var doc in claim.Documents)
+                        {
+                            <a asp-action="Download" asp-route-id="@doc.SupportingDocumentID">@doc.FileName</a>
+                
+                            <br />
+                        }
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
