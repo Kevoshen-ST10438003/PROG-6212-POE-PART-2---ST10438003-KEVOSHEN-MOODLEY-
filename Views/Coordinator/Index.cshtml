@@ -1,0 +1,46 @@
+﻿@model IEnumerable<Contract_Monthly_Claim_System_Part2.Models.Claim>
+@{
+    ViewData["Title"] = "Pending Claims";
+}
+
+<h2>Pending Claims</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ClaimID</th>
+            <th>Hours Worked</th>
+            <th>Hourly Rate</th>
+            <th>Total Amount</th>
+            <th>Notes</th>
+            <th>Documents</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var claim in Model)
+        {
+            <tr>
+                <td>@claim.ClaimID</td>
+                <td>@claim.HoursWorked</td>
+                <td>@claim.HourlyRate</td>
+                <td>@(claim.HoursWorked* claim.HourlyRate)</td>
+                <td>@claim.Notes</td>
+                <td>
+                    @if (claim.Documents != null)
+                    {
+                        foreach (var doc in claim.Documents)
+                        {
+                            <a asp-action="Download" asp-route-docId="@doc.SupportingDocumentID">@doc.FileName</a>
+                
+                            <br />
+                        }
+                    }
+                </td>
+                <td>
+                    <a asp-action="Review" asp-route-id="@claim.ClaimID" class="btn btn-primary btn-sm">Review</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

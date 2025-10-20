@@ -1,0 +1,31 @@
+﻿@model Contract_Monthly_Claim_System_Part2.Models.Claim
+@{
+    ViewData["Title"] = "Review Claim";
+}
+
+<h2>Review Claim ID: @Model.ClaimID</h2>
+
+<div>
+    <p><strong>Hours Worked:</strong> @Model.HoursWorked</p>
+    <p><strong>Hourly Rate:</strong> @Model.HourlyRate</p>
+    <p><strong>Total Amount:</strong> @(Model.HoursWorked* Model.HourlyRate)</p>
+    <p><strong>Notes:</strong> @Model.Notes</p>
+    <p>
+        <strong>Documents:</strong><br />
+        @if (Model.Documents != null)
+        {
+            foreach (var doc in Model.Documents)
+            {
+                <a asp-action="Download" asp-route-docId="@doc.SupportingDocumentID">@doc.FileName</a>
+        
+                <br />
+            }
+        }
+    </p>
+</div>
+
+<form asp-action="Review" method="post">
+    <input type="hidden" name="id" value="@Model.ClaimID" />
+    <button type="submit" name="decision" value="Approve" class="btn btn-success">Verify</button>
+    <button type="submit" name="decision" value="Reject" class="btn btn-danger">Reject</button>
+</form>
