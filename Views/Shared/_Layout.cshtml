@@ -1,50 +1,113 @@
-﻿<!DOCTYPE html>
+﻿@{
+    var title = ViewData["Title"] ?? "CMCS Prototype";
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Contract_Monthly_Claim_System_Part2</title>
-    <script type="importmap"></script>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Contract_Monthly_Claim_System_Part2.styles.css" asp-append-version="true" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@title - CMCS</title>
+
+  
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f4f6f9;
+        }
+
+        .navbar .btn {
+            margin-left: 0.5rem;
+        }
+
+        table th {
+            background-color: #4e73df;
+            color: white;
+        }
+
+        table tr:hover {
+            background-color: #e9ecef;
+        }
+
+        .card {
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-radius: 10px;
+        }
+
+        footer {
+            background-color: white;
+            text-align: center;
+            padding: 1rem;
+            font-size: 0.9rem;
+            color: #6c757d;
+            border-top: 1px solid #dee2e6;
+        }
+    </style>
 </head>
+
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Contract_Monthly_Claim_System_Part2</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
+    
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold text-primary" href="/">CMCS PROTOTYPE</a>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="btn btn-outline-success me-2" href="/Home/Index">
+                            <i class="fa fa-home me-1"></i> Home
+                        </a>
+                    </li>
+
+                    <!-- 🔹 Lecturer Dropdown -->
+                    <li class="nav-item dropdown">
+                        <button class="btn btn-outline-primary dropdown-toggle me-2" data-bs-toggle="dropdown">
+                            Lecturer
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="/Lecturer/SubmitClaim"><i class="fa fa-plus-circle me-2"></i> Submit Claim</a></li>
+                            <li><a class="dropdown-item" href="/Lecturer/ViewClaims"><i class="fa fa-eye me-2"></i> View My Claims</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- 🔹 Coordinator Dropdown -->
+                    <li class="nav-item dropdown">
+                        <button class="btn btn-outline-warning dropdown-toggle me-2" data-bs-toggle="dropdown">
+                            Coordinator
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="/Coordinator/Index"><i class="fa fa-list me-2"></i> Pending Claims</a></li>
+                            <li><a class="dropdown-item" href="/Coordinator/Review"><i class="fa fa-edit me-2"></i> Review Claim</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- 🔹 Manager Dropdown -->
+                    <li class="nav-item dropdown">
+                        <button class="btn btn-outline-dark dropdown-toggle" data-bs-toggle="dropdown">
+                            Manager
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="/Manager/Index"><i class="fa fa-briefcase me-2"></i> Pending Approvals</a></li>
+                            <li><a class="dropdown-item" href="/Manager/Review"><i class="fa fa-check me-2"></i> Final Review</a></li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+        </div>
+    </nav>
+
+    
+    <div class="container py-4">
+        @RenderBody()
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - Contract_Monthly_Claim_System_Part2 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
+    
+    <footer>
+        © @DateTime.Now.Year Contract Monthly Claim System (CMCS) | Prototype UI
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
