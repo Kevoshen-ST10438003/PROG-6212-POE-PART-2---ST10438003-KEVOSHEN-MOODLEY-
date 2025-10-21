@@ -3,33 +3,110 @@
     ViewData["Title"] = "Submit Claim";
 }
 
-<h2>Submit Claim</h2>
+<div class="container mt-5">
+    <div class="card shadow-lg p-5 submit-card">
+        <h2 class="text-center text-gradient mb-4">
+            <i class="fa fa-paper-plane me-2"></i>SUBMIT A LECTURER CLAIM
+        </h2>
 
-<form asp-action="Create" method="post" enctype="multipart/form-data">
-    <div class="form-group">
-        <label asp-for="HoursWorked"></label>
-        <input asp-for="HoursWorked" class="form-control" />
-        <span asp-validation-for="HoursWorked" class="text-danger"></span>
+        
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-4"></div>
+
+        <form asp-action="Create" method="post" enctype="multipart/form-data" novalidate>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label asp-for="LecturerName" class="form-label fw-bold"></label>
+                    <input asp-for="LecturerName" class="form-control shadow-sm" placeholder="Enter your full name" />
+                    <span asp-validation-for="LecturerName" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="HoursWorked" class="form-label fw-bold"></label>
+                    <input asp-for="HoursWorked" class="form-control shadow-sm" placeholder="Enter hours worked" />
+                    <span asp-validation-for="HoursWorked" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label asp-for="HourlyRate" class="form-label fw-bold"></label>
+                    <input asp-for="HourlyRate" class="form-control shadow-sm" placeholder="Enter hourly rate" />
+                    <span asp-validation-for="HourlyRate" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="Notes" class="form-label fw-bold"></label>
+                    <textarea asp-for="Notes" class="form-control shadow-sm" placeholder="Add any notes (optional)"></textarea>
+                    <span asp-validation-for="Notes" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label fw-bold">Upload Supporting Document</label>
+                <input type="file" name="file" class="form-control shadow-sm" accept=".pdf,.docx,.xlsx" />
+                <small class="text-muted">Allowed: PDF, DOCX, XLSX | Max size: 5MB</small>
+
+                @if (ViewData.ModelState["File"]?.Errors.Count > 0)
+                {
+                    <div class="text-danger mt-1">
+                        @foreach (var error in ViewData.ModelState["File"].Errors)
+                        {
+                            <div>@error.ErrorMessage</div>
+                        }
+                    </div>
+                }
+            </div>
+
+            <div class="d-grid mt-4">
+                <button type="submit" class="btn btn-success btn-lg shadow btn-hover">
+                    <i class="fa fa-paper-plane me-2"></i> Submit Claim
+                </button>
+            </div>
+        </form>
     </div>
-    <div class="form-group">
-        <label asp-for="HourlyRate"></label>
-        <input asp-for="HourlyRate" class="form-control" />
-        <span asp-validation-for="HourlyRate" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Notes"></label>
-        <textarea asp-for="Notes" class="form-control"></textarea>
-    </div>
-    <div class="form-group">
-        <label>Upload Supporting Document</label>
-        <input type="file" name="file" class="form-control" />
-        <span asp-validation-summary="ModelOnly" class="text-danger"></span>
-    </div>
-    <button type="submit" class="btn btn-primary mt-2">Submit</button>
-</form>
+</div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    @await Html.PartialAsync("_ValidationScriptsPartial")
 }
+
+<style>
+    body {
+        background: linear-gradient(135deg, #f3f7fd, #e6edf7);
+    }
+
+    .text-gradient {
+        background: linear-gradient(45deg, #007bff, #6610f2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .submit-card {
+        border-radius: 1rem;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(6px);
+        transition: all 0.3s ease;
+    }
+
+        .submit-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 28px rgba(0,0,0,0.15);
+        }
+
+    .shadow-sm {
+        box-shadow: 0 2px 6px rgba(0,0,0,0.05) !important;
+    }
+
+    .btn-hover {
+        transition: all 0.25s ease;
+    }
+
+        .btn-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+    .fa {
+        opacity: 0.9;
+    }
+</style>

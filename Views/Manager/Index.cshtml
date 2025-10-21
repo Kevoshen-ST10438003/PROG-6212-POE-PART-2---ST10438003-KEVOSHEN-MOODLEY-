@@ -3,8 +3,12 @@
     ViewData["Title"] = "Pending Final Approvals";
 }
 
-<h2 class="mb-4 text-success text-center fw-bold">Pending Final Approvals</h2>
-
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="fw-bold text-success"><i class="fa fa-clipboard-list me-2"></i>PENDING FINAL APPROVALS FOR CLAIMS</h2>
+    <a asp-action="History" class="btn btn-outline-secondary">
+        <i class="fa fa-history me-1"></i> View Claim History
+    </a>
+</div>
 
 @if (TempData["Message"] != null)
 {
@@ -13,42 +17,104 @@
     </div>
 }
 
-<table class="table table-hover table-bordered shadow-sm">
-    <thead>
-        <tr>
-            <th>ClaimID</th>
-            <th>Hours Worked</th>
-            <th>Hourly Rate</th>
-            <th>Total Amount</th>
-            <th>Notes</th>
-            <th>Documents</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var claim in Model)
-        {
-            <tr>
-                <td>@claim.ClaimID</td>
-                <td>@claim.HoursWorked</td>
-                <td>@claim.HourlyRate</td>
-                <td>@(claim.HoursWorked* claim.HourlyRate)</td>
-                <td>@claim.Notes</td>
-                <td>
-                    @if (claim.Documents != null)
-                    {
-                        foreach (var doc in claim.Documents)
+<div class="row g-3">
+    @foreach (var claim in Model)
+    {
+        <div class="col-md-6 col-lg-4">
+            <div class="card p-3 h-100 shadow-sm claim-card">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h5 class="card-title mb-0"><i class="fa fa-hashtag me-1"></i>Claim #@claim.ClaimID</h5>
+
+                    @{
+                        var progressClass = claim.Status switch
                         {
-                            <a asp-action="Download" asp-route-docId="@doc.SupportingDocumentID">@doc.FileName</a>
-                
-                            <br />
-                        }
+                            ClaimStatus.CoordinatorApproved => "bg-info",
+                            ClaimStatus.ManagerApproved => "bg-success",
+                            ClaimStatus.Rejected => "bg-danger",
+                            _ => "bg-secondary"
+                        };
+
+                        var badgeText = claim.Status switch
+                        {
+                            ClaimStatus.CoordinatorApproved => "Waiting for Manager Approval",
+                            ClaimStatus.ManagerApproved => "Claim Fully Approved",
+                            ClaimStatus.Rejected => "Rejected",
+                            _ => "Unknown"
+                        };
+
+                        var progress = claim.Status switch
+                        {
+                            ClaimStatus.CoordinatorApproved => 50,
+                            ClaimStatus.ManagerApproved => 100,
+                            ClaimStatus.Rejected => 100,
+                            _ => 0
+                        };
                     }
-                </td>
-                <td>
-                    <a asp-action="Review" asp-route-id="@claim.ClaimID" class="btn btn-outline-success btn-sm px-3">Review</a>
-                </td>
-            </tr>
+
+                    <span class="badge @progressClass">
+                        <i class="fa fa-circle me-1"></i>@badgeText
+                    </span>
+                </div>
+                <p><strong>Lecturer:</strong> @claim.LecturerName</p>
+                <p class="mb-1"><i class="fa fa-clock me-1"></i><strong>Hours Worked:</strong> @claim.HoursWorked</p>
+                <p class="mb-1"><i class="fa fa-money-bill-wave me-1"></i><strong>Hourly Rate:</strong> @claim.HourlyRate.ToString("C")</p>
+                <p class="mb-1"><i class="fa fa-calculator me-1"></i><strong>Total:</strong> @((claim.HoursWorked* claim.HourlyRate).ToString("C"))</p>
+
+                @if (!string.IsNullOrEmpty(claim.Notes))
+                {
+                    <p class="mb-1"><i class="fa fa-sticky-note me-1"></i><strong>Notes:</strong> @claim.Notes</p>
+                }
+
+                <p class="mb-2"><small class="text-muted"><i class="fa fa-calendar-alt me-1"></i>Submitted: @claim.SubmissionDate.ToShortDateString()</small></p>
+
+                
+                <div class="progress mb-2" style="height: 6px;">
+                    <div class="progress-bar @progressClass" role="progressbar" style="width: @progress%"></div>
+                </div>
+
+                
+                @if (claim.Documents != null && claim.Documents.Any())
+                {
+                    <p class="mb-1"><strong>Documents:</strong></p>
+                    <ul class="list-unstyled">
+                        @foreach (var doc in claim.Documents)
+                        {
+                            <li>
+                                <a class="btn btn-sm btn-outline-primary mb-1 d-flex align-items-center justify-content-center download-btn" asp-action="Download" asp-route-docId="@doc.SupportingDocumentID">
+                                    <i class="fa fa-download me-1"></i> @doc.FileName
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                }
+
+                <div class="d-flex justify-content-end mt-2">
+                    <a asp-action="Review" asp-route-id="@claim.ClaimID" class="btn btn-outline-success btn-sm px-3">
+                        <i class="fa fa-eye me-1"></i> Review
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<style>
+    .claim-card {
+        transition: transform 0.2s, box-shadow 0.2s;
+        cursor: pointer;
+    }
+
+        .claim-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
         }
-    </tbody>
-</table>
+
+    .download-btn {
+        transition: background-color 0.2s, color 0.2s;
+    }
+
+        .download-btn:hover {
+            background-color: #4e73df;
+            color: white;
+        }
+</style>

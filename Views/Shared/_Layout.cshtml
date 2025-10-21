@@ -8,7 +8,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>@title - CMCS</title>
 
-  
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
@@ -48,49 +47,64 @@
 </head>
 
 <body>
-    
+
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
         <div class="container">
             <a class="navbar-brand fw-bold text-primary" href="/">CMCS PROTOTYPE</a>
 
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
+
                     <li class="nav-item">
-                        <a class="btn btn-outline-success me-2" href="/Home/Index">
+                        <a class="btn btn-outline-success me-2" asp-controller="Home" asp-action="Index">
                             <i class="fa fa-home me-1"></i> Home
                         </a>
                     </li>
 
-                    <!-- 🔹 Lecturer Dropdown -->
+                    
                     <li class="nav-item dropdown">
                         <button class="btn btn-outline-primary dropdown-toggle me-2" data-bs-toggle="dropdown">
                             Lecturer
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="/Lecturer/SubmitClaim"><i class="fa fa-plus-circle me-2"></i> Submit Claim</a></li>
-                            <li><a class="dropdown-item" href="/Lecturer/ViewClaims"><i class="fa fa-eye me-2"></i> View My Claims</a></li>
+                            <li>
+                                <a class="dropdown-item" asp-controller="LecturerClaim" asp-action="Create">
+                                    <i class="fa fa-plus-circle me-2"></i> Submit Claim
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" asp-controller="LecturerClaim" asp-action="Index">
+                                    <i class="fa fa-eye me-2"></i> View Lecturer Claims
+                                </a>
+                            </li>
                         </ul>
                     </li>
 
-                    <!-- 🔹 Coordinator Dropdown -->
+                    
                     <li class="nav-item dropdown">
                         <button class="btn btn-outline-warning dropdown-toggle me-2" data-bs-toggle="dropdown">
                             Coordinator
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="/Coordinator/Index"><i class="fa fa-list me-2"></i> Pending Claims</a></li>
-                            <li><a class="dropdown-item" href="/Coordinator/Review"><i class="fa fa-edit me-2"></i> Review Claim</a></li>
+                            <li>
+                                <a class="dropdown-item" asp-controller="Coordinator" asp-action="Index">
+                                    <i class="fa fa-list me-2"></i> Pending Claims
+                                </a>
+                            </li>
                         </ul>
                     </li>
 
-                    <!-- 🔹 Manager Dropdown -->
+                    
                     <li class="nav-item dropdown">
                         <button class="btn btn-outline-dark dropdown-toggle" data-bs-toggle="dropdown">
                             Manager
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="/Manager/Index"><i class="fa fa-briefcase me-2"></i> Pending Approvals</a></li>
-                            <li><a class="dropdown-item" href="/Manager/Review"><i class="fa fa-check me-2"></i> Final Review</a></li>
+                            <li>
+                                <a class="dropdown-item" asp-controller="Manager" asp-action="Index">
+                                    <i class="fa fa-briefcase me-2"></i> Pending Approvals
+                                </a>
+                            </li>
                         </ul>
                     </li>
                 </ul>
@@ -98,16 +112,17 @@
         </div>
     </nav>
 
-    
     <div class="container py-4">
         @RenderBody()
     </div>
 
-    
     <footer>
         © @DateTime.Now.Year Contract Monthly Claim System (CMCS) | Prototype UI
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+
+    @RenderSection("Scripts", required: false)
+
 </body>
 </html>

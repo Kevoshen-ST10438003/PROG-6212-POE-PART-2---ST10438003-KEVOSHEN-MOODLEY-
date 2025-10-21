@@ -3,29 +3,86 @@
     ViewData["Title"] = "Review Claim for Final Approval";
 }
 
-<h2>Final Review Claim ID: @Model.ClaimID</h2>
+<div class="container mt-4">
+    <div class="card shadow-lg p-4 review-card">
+        <h2 class="text-center text-gradient mb-4">
+            <i class="fa fa-search me-2"></i>Final Review: Claim #@Model.ClaimID
+        </h2>
 
-<div>
-    <p><strong>Hours Worked:</strong> @Model.HoursWorked</p>
-    <p><strong>Hourly Rate:</strong> @Model.HourlyRate</p>
-    <p><strong>Total Amount:</strong> @(Model.HoursWorked* @Model.HourlyRate)</p>
-    <p><strong>Notes:</strong> @Model.Notes</p>
-    <p>
-        <strong>Documents:</strong><br />
-        @if (Model.Documents != null)
-        {
-            foreach (var doc in Model.Documents)
-            {
-                <a asp-action="Download" asp-route-docId="@doc.SupportingDocumentID">@doc.FileName</a>
-        
-                <br />
-            }
-        }
-    </p>
+        <div class="mb-3">
+            <p><strong>Hours Worked:</strong> @Model.HoursWorked</p>
+            <p><strong>Hourly Rate:</strong> @Model.HourlyRate.ToString("C")</p>
+            <p><strong>Total Amount:</strong> @(Model.HoursWorked* Model.HourlyRate).ToString("C")</p>
+            <p><strong>Notes:</strong> @Model.Notes</p>
+            <p>
+                <strong>Documents:</strong><br />
+                @if (Model.Documents != null && Model.Documents.Any())
+                {
+                    foreach (var doc in Model.Documents)
+                    {
+                        <a asp-action="Download" asp-route-docId="@doc.SupportingDocumentID" class="btn btn-sm btn-outline-primary mb-1 download-btn">
+                            <i class="fa fa-download me-1"></i> @doc.FileName
+                        </a>
+                        <br />
+                    }
+                }
+                else
+                {
+                    <span class="text-muted">No supporting documents uploaded.</span>
+                }
+            </p>
+        </div>
+
+        <div class="d-flex justify-content-center gap-3 mt-3">
+            <form asp-action="Review" method="post">
+                <input type="hidden" name="id" value="@Model.ClaimID" />
+                <button type="submit" name="decision" value="Approve" class="btn btn-success btn-lg">
+                    <i class="fa fa-check me-1"></i> Approve
+                </button>
+            </form>
+            <form asp-action="Review" method="post">
+                <input type="hidden" name="id" value="@Model.ClaimID" />
+                <button type="submit" name="decision" value="Reject" class="btn btn-danger btn-lg">
+                    <i class="fa fa-times me-1"></i> Reject
+                </button>
+            </form>
+        </div>
+    </div>
 </div>
 
-<form asp-action="Review" method="post">
-    <input type="hidden" name="id" value="@Model.ClaimID" />
-    <button type="submit" name="decision" value="Approve" class="btn btn-success">Approve</button>
-    <button type="submit" name="decision" value="Reject" class="btn btn-danger">Reject</button>
-</form>
+<style>
+    body {
+        background: linear-gradient(135deg, #f3f7fd, #e6edf7);
+    }
+
+    .text-gradient {
+        background: linear-gradient(45deg, #6610f2, #007bff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .review-card {
+        border-radius: 1rem;
+        background: rgba(255, 255, 255, 0.97);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .review-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 28px rgba(0,0,0,0.18);
+        }
+
+    .download-btn {
+        transition: all 0.2s ease-in-out;
+    }
+
+        .download-btn:hover {
+            background-color: #4e73df;
+            color: white;
+        }
+
+    .btn-lg {
+        min-width: 140px;
+    }
+</style>
+

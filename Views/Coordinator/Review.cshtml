@@ -3,29 +3,103 @@
     ViewData["Title"] = "Review Claim";
 }
 
-<h2>Review Claim ID: @Model.ClaimID</h2>
+<div class="container py-4">
+    <h2 class="fw-bold text-gradient mb-4">
+        <i class="fa fa-eye me-2"></i>Review Claim ID: @Model.ClaimID
+    </h2>
 
-<div>
-    <p><strong>Hours Worked:</strong> @Model.HoursWorked</p>
-    <p><strong>Hourly Rate:</strong> @Model.HourlyRate</p>
-    <p><strong>Total Amount:</strong> @(Model.HoursWorked* Model.HourlyRate)</p>
-    <p><strong>Notes:</strong> @Model.Notes</p>
-    <p>
-        <strong>Documents:</strong><br />
-        @if (Model.Documents != null)
+    <div class="card shadow-sm p-4 mb-4 review-card">
+        <p><i class="fa fa-user me-2 text-muted"></i><strong>Lecturer:</strong> @Model.LecturerName</p>
+        <p><i class="fa fa-clock me-2 text-muted"></i><strong>Hours Worked:</strong> @Model.HoursWorked</p>
+        <p><i class="fa fa-money-bill me-2 text-muted"></i><strong>Hourly Rate:</strong> @Model.HourlyRate.ToString("C")</p>
+        <p><i class="fa fa-calculator me-2 text-muted"></i><strong>Total Amount:</strong> @(Model.HoursWorked* Model.HourlyRate).ToString("C")</p>
+
+        @if (!string.IsNullOrEmpty(Model.Notes))
         {
-            foreach (var doc in Model.Documents)
-            {
-                <a asp-action="Download" asp-route-docId="@doc.SupportingDocumentID">@doc.FileName</a>
-        
-                <br />
-            }
+            <p><i class="fa fa-sticky-note me-2 text-muted"></i><strong>Notes:</strong> @Model.Notes</p>
         }
-    </p>
+
+        <div class="mt-3">
+            <p class="fw-bold mb-2"><i class="fa fa-paperclip me-2 text-secondary"></i>Documents:</p>
+            @if (Model.Documents != null && Model.Documents.Any())
+            {
+                @foreach (var doc in Model.Documents)
+                {
+                    <a asp-action="Download" asp-route-docId="@doc.SupportingDocumentID"
+                       class="btn btn-sm btn-outline-primary w-100 mb-2 d-flex align-items-center justify-content-center">
+                        <i class="fa fa-download me-2"></i>@doc.FileName
+                    </a>
+                }
+            }
+            else
+            {
+                <p class="text-muted"><i class="fa fa-ban me-1"></i>No documents uploaded.</p>
+            }
+        </div>
+
+        <form asp-action="Review" method="post" class="mt-4 d-flex gap-3 justify-content-center">
+            <input type="hidden" name="id" value="@Model.ClaimID" />
+            <button type="submit" name="decision" value="Approve" class="btn btn-success btn-lg px-4">
+                <i class="fa fa-check me-1"></i> Verify
+            </button>
+            <button type="submit" name="decision" value="Reject" class="btn btn-danger btn-lg px-4">
+                <i class="fa fa-times me-1"></i> Reject
+            </button>
+        </form>
+    </div>
 </div>
 
-<form asp-action="Review" method="post">
-    <input type="hidden" name="id" value="@Model.ClaimID" />
-    <button type="submit" name="decision" value="Approve" class="btn btn-success">Verify</button>
-    <button type="submit" name="decision" value="Reject" class="btn btn-danger">Reject</button>
-</form>
+<style>
+    body {
+        background: linear-gradient(135deg, #f8f9fa, #eef3f8);
+    }
+
+    .text-gradient {
+        background: linear-gradient(45deg, #007bff, #6610f2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .review-card {
+        background: rgba(255, 255, 255, 0.88);
+        backdrop-filter: blur(8px);
+        border-radius: 1rem;
+        transition: all 0.3s ease;
+    }
+
+        .review-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+    .btn-outline-primary {
+        border-color: #4e73df;
+        color: #4e73df;
+        transition: all 0.2s ease;
+    }
+
+        .btn-outline-primary:hover {
+            background-color: #4e73df;
+            color: #fff;
+            box-shadow: 0 3px 6px rgba(78, 115, 223, 0.3);
+        }
+
+    .btn-success, .btn-danger {
+        font-weight: 600;
+        transition: all 0.2s ease;
+    }
+
+        .btn-success:hover {
+            background-color: #218838;
+            box-shadow: 0 3px 6px rgba(33, 136, 56, 0.3);
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+            box-shadow: 0 3px 6px rgba(200, 35, 51, 0.3);
+        }
+
+    .fa {
+        opacity: 0.85;
+    }
+</style>

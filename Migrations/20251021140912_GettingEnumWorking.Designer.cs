@@ -4,6 +4,7 @@ using Contract_Monthly_Claim_System_Part2.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Contract_Monthly_Claim_System_Part2.Migrations
 {
     [DbContext(typeof(CMCSContext))]
-    partial class CMCSContextModelSnapshot : ModelSnapshot
+    [Migration("20251021140912_GettingEnumWorking")]
+    partial class GettingEnumWorking
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,11 +38,6 @@ namespace Contract_Monthly_Claim_System_Part2.Migrations
 
                     b.Property<int>("HoursWorked")
                         .HasColumnType("int");
-
-                    b.Property<string>("LecturerName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Notes")
                         .HasMaxLength(500)
